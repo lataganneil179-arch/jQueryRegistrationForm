@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JQUERY REGISTRATION FORM</title>
+
+<style>
+/* original design kept exactly */
+body { margin: 0; padding: 0; font-family: "Poppins", sans-serif; background: linear-gradient(135deg, #05010f, #0b0033, #140050, #1b0066); background-size: 400% 400%; animation: bgMove 15s infinite alternate; color: white; }
+@keyframes bgMove { 0% {background-position: 0% 50%;} 100% {background-position: 100% 50%;} }
+.star { position: fixed; width: 3px; height: 3px; background: white; border-radius: 50%; box-shadow: 0 0 6px cyan, 0 0 12px cyan; animation: twinkle 2s infinite alternate; }
+@keyframes twinkle { from { opacity: .2; transform: scale(0.8);} to {opacity: 1; transform: scale(1.3);} }
+.container { width: 90%; max-width: 750px; margin: 40px auto; padding: 20px; animation: fadeIn 1s ease-out; }
+@keyframes fadeIn { from {opacity: 0; transform: translateY(40px);} to {opacity: 1; transform: translateY(0);} }
+h2 { text-align: center; font-size: 36px; font-weight: bold; text-shadow: 0 0 10px #5cfffb, 0 0 20px #5cfffb; }
+label { display: block; margin-top: 12px; font-size: 17px; font-weight: 500; text-shadow: 0 0 6px #6d8cff; }
+input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border-radius: 14px; border: 2px solid #00eaff; background: rgba(255,255,255,0.08); color: white; font-size: 16px; backdrop-filter: blur(5px); box-shadow: 0 0 12px #00eaff; transition: 0.3s; }
+input:focus, select:focus, textarea:focus { outline: none; transform: scale(1.05); border-color: #6bfffd; box-shadow: 0 0 18px #6bfffd; }
+.success { background: rgba(92,255,133,0.2); padding: 20px; margin-top: 20px; border-radius: 16px; border: 2px solid #5CFF85; font-size: 20px; text-align: center; box-shadow: 0 0 25px #5CFF85; }
+.error-text { color: #ff6b6b; font-weight: bold; }
+.valid-text { color: #5CFF85; font-weight: bold; }
+button { padding: 14px 25px; font-size: 18px; border-radius: 14px; cursor: pointer; margin-top: 18px; }
+.reset-btn { background: #ff6ba3; color: white; }
+.submit-btn { background: #5CFF85; color: #002d14; }
+</style>
+</head>
+<body>
+<script>
+for(let i = 0; i < 70; i++){ let s = document.createElement("div"); s.className = "star"; s.style.top = Math.random() * 100 + "%"; s.style.left = Math.random() * 100 + "%"; document.body.appendChild(s);} 
+</script>
+
+<div class="container">
+<h2>JQUERY REGISTRATION FORM</h2>
+<form id="studentForm" novalidate>
+<label>Last Name:</label>
+<input type="text" id="lastName"><div id="lastNameMsg"></div>
+
+<label>First Name:</label>
+<input type="text" id="firstName"><div id="firstNameMsg"></div>
+
+<label>Middle Name (Optional):</label>
+<input type="text" id="middleName"><div id="middleNameMsg"></div>
+
+<label>Course:</label>
+<select id="course"><option value="">Select Course</option><option>BSIT</option><option>BSCS</option><option>BSEMC</option></select><div id="courseMsg"></div>
+
+<label>Year:</label>
+<select id="year"><option value="">Select Year</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select><div id="yearMsg"></div>
+
+<label>Section:</label>
+<select id="section"><option value="">Select Section</option><option>A</option><option>B</option><option>C</option></select><div id="sectionMsg"></div>
+
+<label>Student Number (24-46031):</label>
+<input type="text" id="studentNumber"><div id="studentNumberMsg"></div>
+
+<label>Date of Birth:</label>
+<input type="date" id="birthdate"><div id="birthdateMsg"></div>
+
+<label>Gender:</label>
+<input type="radio" name="gender" value="Male"> Male
+<input type="radio" name="gender" value="Female"> Female
+<input type="radio" name="gender" value="Other"> Other
+<div id="genderMsg"></div>
+
+<label>Complete Address:</label>
+<textarea id="address"></textarea><div id="addressMsg"></div>
+
+<label>Contact Number:</label>
+<input type="text" id="contact" placeholder="09xxxxxxxxx"><div id="contactMsg"></div>
+
+<label>Email:</label>
+<input type="text" id="email" placeholder="example@gmail.com"><div id="emailMsg"></div>
+
+<button type="reset" class="reset-btn">Reset</button>
+<button type="submit" class="submit-btn">Submit</button>
+<div id="successMessage"></div>
+</form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+
+function validateField(input, messageBox) {
+    let value = $(input).val().trim();
+    let id = $(input).attr("id");
+
+    // name fields MUST NOT contain numbers
+    if ((id === "lastName" || id === "firstName" || id === "middleName") && /[0-9]/.test(value)) {
+        $(input).css("border", "2px solid red");
+        $(messageBox).text("Invalid: Name cannot contain numbers").addClass("error-text");
+        return;
+    }
+
+    if (value === "") {
+        $(input).css("border", "2px solid red");
+        $(messageBox).text("This field is required").addClass("error-text").removeClass("valid-text");
+    } else {
+        $(input).css("border", "2px solid lime");
+        $(messageBox).text("").removeClass("error-text");
+    }
+}
+
+$("#lastName, #firstName, #middleName, #studentNumber, #address, #contact, #email").on("keyup blur", function () {
+    let msg = "#" + $(this).attr("id") + "Msg";
+    validateField(this, msg);
+});
+
+$("#course, #year, #section").on("change blur", function () {
+    let msg = "#" + $(this).attr("id") + "Msg";
+    if ($(this).val() === "") {
+        $(this).css("border", "2px solid red");
+        $(msg).text("Please select an option").addClass("error-text");
+    } else {
+        $(this).css("border", "2px solid lime");
+        $(msg).text("");
+    }
+});
+
+$("#birthdate").on("blur", function () { validateField(this, "#birthdateMsg"); });
+$("input[name='gender']").on("change", function () { $("#genderMsg").text(""); });
+
+$("#studentForm").submit(function (e) {
+    e.preventDefault();
+    $("input, select, textarea").blur();
+
+    if ($(".error-text:visible").length === 0) {
+        $("#successMessage").html("<div class='success'>✔ Form Successfully Submitted!</div>");
+    }
+});
+
+});
+</script>
+</body>
+</html>
